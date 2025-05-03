@@ -1,0 +1,28 @@
+{
+	"restoreTerminals.terminals": [
+		{
+			"splitTerminals": [
+				{
+					"name": "App",
+					"commands": ["npm run dev"]
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "PocketBase",
+					"commands": ["cd pocketbase", "air serve"]
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "General",
+					"commands": []
+				}
+			]
+		}
+	]
+}

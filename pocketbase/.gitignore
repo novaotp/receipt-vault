@@ -1,0 +1,3 @@
+/tmp/*
+!tmp/pb_migrations
+.env

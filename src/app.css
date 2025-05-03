@@ -1,1 +1,17 @@
 @import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+	font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+body {
+	height: 100dvh;
+}
+
+@supports not (height: 100dvh) {
+	body {
+		height: 100vh;
+	}
+}

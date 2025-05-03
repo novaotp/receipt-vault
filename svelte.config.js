@@ -7,7 +7,15 @@ const config = {
 	kit: {
 		adapter: adapter({
 			fallback: 'index.html'
-		})
+		}),
+		alias: {
+			$components: './src/lib/components',
+			$states: './src/lib/states',
+			$contexts: './src/lib/contexts',
+			$services: './src/lib/services',
+			$types: './src/lib/types',
+			$utils: './src/lib/utils'
+		}
 	}
 };
 
