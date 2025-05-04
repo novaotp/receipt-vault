@@ -2,17 +2,16 @@ import { ClientResponseError } from 'pocketbase';
 import { pb } from '../pb';
 import type { Toast } from '$states/toast';
 
-export async function createReceipt(data: {
+export async function createFolder(data: {
 	userId: string;
-	folderId: string | null;
+	parentId: string | null;
 	name: string;
-	image: Blob;
 }) {
 	let type: Toast['type'] = 'success';
-	let message = 'Created receipt successfully';
+	let message = 'Created folder successfully';
 
 	try {
-		await pb.collection('receipts').create(data);
+		await pb.collection('folders').create(data);
 	} catch (error) {
 		type = 'error';
 

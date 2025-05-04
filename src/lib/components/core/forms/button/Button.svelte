@@ -4,6 +4,7 @@
 	import { buttonVariant, type ButtonVariant } from './variants.svelte';
 
 	interface Props extends HTMLButtonAttributes {
+		element?: HTMLButtonElement;
 		/** @default "primary" */
 		variant?: ButtonVariant;
 	}
@@ -12,6 +13,7 @@
 		children,
 		class: className,
 		disabled,
+		element = $bindable(),
 		type = 'button',
 		variant = 'primary',
 		...restProps
@@ -24,6 +26,7 @@ A pre-styled button.
 -->
 
 <button
+	bind:this={element}
 	{type}
 	{disabled}
 	aria-disabled={disabled}

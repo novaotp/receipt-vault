@@ -2,13 +2,13 @@
 	import { pb } from '$services/pb';
 	import { toastManager } from '$states/toast';
 	import { setUser } from '$states/user';
+
 	import { Button } from '$components/core';
 	import { Navigation } from '$components/domains/layout';
-	import type { UsersRecord } from '$types/pocketbase-types';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
-	const user = setUser(pb.authStore.record as unknown as UsersRecord);
+	const user = setUser(data.user!);
 
 	async function requestEmailVerification() {
 		const isSent = await pb.collection('users').requestVerification(user.email);
@@ -23,21 +23,29 @@
 	}
 </script>
 
-{#if user.verified}
-	{@render children()}
-	<Navigation />
-{:else}
-	<div
-		class="fixed top-0 left-0 flex h-full w-full flex-col items-center justify-center gap-10 p-5"
-	>
-		<h1 class="text-2xl font-semibold">It looks like you are not verified.</h1>
-		<p>
-			Your account is not verified yet. To prevent spam accounts, we kindly ask you to click on the
-			link in the verification email to comfirm your identity.
-		</p>
-		<Button onclick={requestEmailVerification}>Request email</Button>
-		<p class="text-sm text-zinc-500">
-			Need help ? <a href="/contact-us" class="text-blue-600 hover:underline">Contact Us</a>
-		</p>
-	</div>
-{/if}
+<svelte:boundary>
+	{#if user.verified}
+		{@render children()}
+		<Navigation />
+	{:else}
+		<div
+			class="fixed top-0 left-0 flex h-full w-full flex-col items-center justify-center gap-10 p-5"
+		>
+			<h1 class="text-2xl font-semibold">It looks like you are not verified.</h1>
+			<p>
+				Your account is not verified yet. To prevent spam accounts, we kindly ask you to click on
+				the link in the verification email to comfirm your identity.
+			</p>
+			<Button onclick={requestEmailVerification}>Request email</Button>
+			<p class="text-sm text-zinc-500">
+				Need help ? <a href="/contact-us" class="text-blue-600 hover:underline">Contact Us</a>
+			</p>
+		</div>
+	{/if}
+
+	{#snippet failed(error, reset)}
+		<h1>Unexpected error</h1>
+		<p>{error}</p>
+		<Button onclick={reset}>Retry</Button>
+	{/snippet}
+</svelte:boundary>

@@ -1,29 +1,56 @@
 <script lang="ts">
-	import { pb } from '$services/pb/index.js';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { pb } from '$services/pb';
+	import { getUser } from '$states/user';
+
+	import New from '$components/domains/receipt/New.svelte';
+	import DisplayItems from '$components/domains/receipt/DisplayItems.svelte';
 
 	let { data } = $props();
 
-	let receipts = $state(data.receipts);
+	const user = getUser();
+
+	let currentFolder = $derived(data.currentFolder);
+	let folders = $derived(data.folders);
+	let receipts = $derived(data.receipts);
+
+	function back() {
+		const href = currentFolder?.parentId ? `?folderId=${currentFolder.parentId}` : '/';
+		goto(href);
+	}
 
 	onMount(async () => {
-		await pb.collection('receipts').subscribe('*', async ({ action, record }) => {
-			receipts = await pb.collection('receipts').getFullList();
+		await pb.collection('folders').subscribe('*', async () => {
+			folders = await pb.collection('folders').getFullList({
+				filter: `userId = '${user.id}' && parentId = '${currentFolder?.id ?? ''}'`
+			});
+		});
+
+		await pb.collection('receipts').subscribe('*', async () => {
+			receipts = await pb.collection('receipts').getFullList({
+				filter: `userId = '${user.id}' && folderId = '${currentFolder?.id ?? ''}'`
+			});
 		});
 	});
 </script>
 
 <svelte:head>
-	<title>Home - Receipt Vault</title>
+	<title>{currentFolder?.name ?? 'Home'} - Receipt Vault</title>
 </svelte:head>
 
-<main class="relative flex h-full w-full flex-col gap-5 p-5">
-	<h1>My receipts</h1>
-	{#each receipts as receipt (receipt.id)}
-		{@const src = pb.files.getURL(receipt, receipt.image, { thumb: '40x0' })}
-		<div class="relative flex w-full items-start justify-start gap-5">
-			<img {src} alt="Receipt {receipt.name}" class="size-10" />
-			<div>{receipt.name}</div>
-		</div>
-	{/each}
+<main class="relative flex h-full w-full flex-col items-start gap-5 p-5">
+	{@render header()}
+	<DisplayItems {folders} {receipts} />
+	<New />
 </main>
+
+{#snippet header()}
+	{#if currentFolder}
+		<button onclick={back} class="cursor-pointer">
+			<span>{currentFolder?.name}</span>
+		</button>
+	{:else}
+		<span>Home</span>
+	{/if}
+{/snippet}
