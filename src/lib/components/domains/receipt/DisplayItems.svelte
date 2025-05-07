@@ -28,9 +28,9 @@
 	{/each}
 	{#each receipts as receipt (receipt.id)}
 		{@const src = pb.files.getURL(receipt, receipt.image, { thumb: '40x0' })}
-		<div class="relative flex w-full items-start justify-start gap-5">
+		<a href="/receipts/{receipt.id}" class="relative flex w-full items-start justify-start gap-5">
 			<img {src} alt="Receipt {receipt.name}" class="size-10" />
 			<span>{receipt.name}</span>
-		</div>
+		</a>
 	{/each}
 {/if}

@@ -1,9 +1,10 @@
 import { cn } from '$utils/cn';
 
-export type ButtonVariant = 'primary' | 'destructive';
+export type ButtonVariant = 'primary' | 'secondary' | 'destructive';
 
 const colors: Record<ButtonVariant, string> = {
 	primary: 'bg-blue-700 text-white',
+	secondary: 'bg-zinc-600 text-white',
 	destructive: 'bg-red-500 text-white'
 };
 

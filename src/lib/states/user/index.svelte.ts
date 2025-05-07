@@ -1,10 +1,11 @@
-import { getContext, onMount, setContext } from 'svelte';
+import { getContext, setContext } from 'svelte';
 import { goto } from '$app/navigation';
 import { pb } from '$services/pb';
 import type { UsersRecord } from '$types/pocketbase-types';
 
 const USER_KEY = Symbol('USER_KEY');
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let user = $state(pb.authStore.record as unknown as UsersRecord);
 
 export function getUser(): UsersRecord {
